@@ -1,0 +1,37 @@
+name: Node.js test (env)
+
+on:
+  pull_request_target:
+    branches:
+      - main
+
+env:
+  NODE_ENV: github
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - run: echo "checkout head ${{ github.event.pull_request.head.sha }}"
+      - run: echo "base ${{ github.event.pull_request.base.sha }}"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Create .env file
+        run: touch .env.github
+          echo "SESSION_SECRET="secret"" >> .env
+          echo "SESSION_RE_SAVE=false" >> .env
+          echo "SESSION_SAVE_UNINITIALIZED=false" >> .env
+          echo "ROOT_ADMIN_EMAIL="root@example.com"" >> .env
+      - run: npm install
+      - run: npm run start
