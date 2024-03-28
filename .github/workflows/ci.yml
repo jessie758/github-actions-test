@@ -27,11 +27,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Create .env file
-        run: touch .env.github
-          echo "SESSION_SECRET="secret"" >> .env
-          echo "SESSION_RE_SAVE=false" >> .env
-          echo "SESSION_SAVE_UNINITIALIZED=false" >> .env
-          echo "ROOT_ADMIN_EMAIL="root@example.com"" >> .env
+      - name: Create .env.github file
+        run: |
+          touch .env.github
+          echo "SESSION_SECRET="secret"" >> .env.github
+          echo "SESSION_RE_SAVE=false" >> .env.github
+          echo "SESSION_SAVE_UNINITIALIZED=false" >> .env.github
+          echo "ROOT_ADMIN_EMAIL="root@example.com"" >> .env.github
       - run: npm install
       - run: npm run start
